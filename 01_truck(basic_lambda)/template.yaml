@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  assignment
+
+  Sample SAM Template for assignment
+
+
+Resources:
+  TruckTrackerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello_world/
+      Handler: truck.lat_long
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+  GetTicketFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello_world/
+      Handler: truck.lambda_ticket
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+  
+

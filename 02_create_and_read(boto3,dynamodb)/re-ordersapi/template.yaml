@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  re-ordersapi
+
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 30
+    Environment: # To provide database global
+      Variables:
+        ORDERS_TABLE: !Ref OrdersTable
+
+
+Resources:
+  OrdersTable: # Dynamodb
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: Number
+  CreateOrderFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: orders_api/
+      Handler: create.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        CreateOrders:
+          Type: Api
+          Properties:
+            Path: /orders
+            Method: POST
+      Policies:
+          - DynamoDBCrudPolicy:
+              TableName: !Ref OrdersTable
+  ReadOrderFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: orders_api/
+      Handler: read.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        ReadOrders:
+          Type: Api
+          Properties:
+            Path: /orders/{id}
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref OrdersTable
+
+Outputs:
+  CreateOrdersAPI:
+    Description: "API Gateway endpoint url for creating orders"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Stage/orders"
+  CreateOrderFunction:
+    Description: "Create Order Function ARN"
+    Value: !GetAtt CreateOrderFunction.Arn
+  CreateOrderFunctionIAMRole:
+    Description: "Create Order Function IAM Role ARN"
+    Value: !GetAtt CreateOrderFunctionRole.Arn

@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "ordersapi"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1ps87c1penl7l"
+s3_prefix = "ordersapi"
+region = "eu-central-1"
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

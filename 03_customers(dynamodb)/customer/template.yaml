@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  customer
+
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Runtime: python3.9
+    Timeout: 30
+    Environment:
+      Variables:
+        CUSTOMERS_TABLE: !Ref CustomersTable
+
+Resources:
+  CustomersTable:
+    Type: AWS::Serverless::SimpleTable # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: Number
+  CreateCustomerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: customer_api
+      Handler: create.lambda_handler
+      Events:
+        CreateCustomers:
+          Type: Api
+          Properties:
+            Path: /customers
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref CustomersTable
+  ReadCustomerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: customer_api/
+      Handler: get.lambda_handler
+      Events:
+        ReadCustomer:
+          Type: Api
+          Properties:
+            Path: /customers/{id}
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref CustomersTable
+
+
+

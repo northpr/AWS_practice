@@ -1,0 +1,12 @@
+[
+  {
+    "firstName": "North",
+    "lastName": "Patawee",
+    "ssn" : "12345"
+  },
+  {
+    "firstName": "Jo",
+    "lastName": "Nathanan",
+    "ssn": "23456"
+  }
+]
