@@ -49,5 +49,17 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: !Ref CustomersTable
 
+Outputs:
+  CreateCustomerAPI: 
+    Description: "API Gateway endpoint url for creating customers"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Stage/customers"
+  CreateCustomerFunction:
+    Description: "Create Customer Function ARN"
+    Value: !GetAtt CreateCustomerFunction.Arn
+  CreateCustomerFunctionIAMRole:
+    Description: "Create Customer Function IAM Role ARN"
+    Value: !GetAtt CreateCustomerFunctionRole.Arn
+
+
 
 
